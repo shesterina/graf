@@ -259,10 +259,27 @@ function serve() {
   });
 }
 
+// Задача для копирования dist в deploy для GitHub Pages
+function deploy() {
+  return gulp.src('dist/**/*')
+    .pipe(plumber({ errorHandler: onError }))
+    .on('error', function(err) {
+      console.error('\n✗ Ошибка копирования в deploy:', err.message);
+      this.emit('end');
+    })
+    .pipe(gulp.dest('deploy/'))
+    .on('end', function() {
+      console.log('✓ Файлы скопированы из dist в deploy/');
+    });
+}
+
 // Задача для сборки проекта (production)
 const build = gulp.series(
   gulp.parallel(html, stylesMin, scriptsMin, images, echarts, echartsGl)
 );
+
+// Задача для деплоя (сборка + копирование в deploy)
+const deployTask = gulp.series(build, deploy);
 
 // Задача по умолчанию (development)
 const dev = gulp.series(
@@ -279,5 +296,7 @@ exports.echarts = echarts;
 exports.echartsGl = echartsGl;
 exports.serve = serve;
 exports.build = build;
+exports.deploy = deploy;
+exports.deployTask = deployTask;
 exports.default = dev;
 

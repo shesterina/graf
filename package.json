@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "gulp",
     "build": "gulp build",
+    "deploy": "gulp deployTask",
     "read-excel": "node read-excel.js"
   },
   "dependencies": {
